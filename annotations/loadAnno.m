@@ -23,14 +23,16 @@ for i = 1:length(cities),
         baseName = f(j).name(1:end-4);
         city(count).image = f(j).name;
         city(count).seeds = [baseName '_fgpixels.mat'];
-        city(count).gtLabel = ['label_' baseName '.mat'];
+        city(count).label = ['label_' baseName '.mat'];
+        city(count).region = [baseName '_greedy_hz3_cost.mat'];
         city(count).cityId = i;
     end
 end
 
 anno.object.image = {city(:).image};
 anno.object.seeds = {city(:).seeds};
-anno.object.gtLabel = {city(:).gtLabel};
+anno.object.label = {city(:).label};
+anno.object.region = {city(:).region};
 anno.object.cityId = [city(:).cityId];
 
 % Parse imageSet information
