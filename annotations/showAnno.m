@@ -18,7 +18,7 @@ global g;
 g.conf = conf;
 g.anno = anno;
 g.curId = 1;
-g.edgeOverlay = true;
+g.edgeOverlay = false;
 g.showSeeds = true;
 g.se = strel('diamond', 3);
 numImages = length(anno.object.image);
@@ -50,37 +50,51 @@ while(1),
             g.showSeeds = ~g.showSeeds;
     end
 end
+
+
 %--------------------------------------------------------------------------
-%                                           draw the annotations for the image
+%                                        draw the annotations for the image
 %--------------------------------------------------------------------------
 function drawAnno()
 global g;
+
 i = g.curId;
 
-figure(1); clf;
+% Load annotations corresponding to this data
 city = g.anno.meta.cities{g.anno.object.cityId(i)};
 im = imread(fullfile(g.conf.path.image, city, g.anno.object.image{i}));
-load(fullfile(g.conf.path.annotations, city, g.anno.object.gtLabel{i}));
+load(fullfile(g.conf.path.labels, city, g.anno.object.label{i}));
+load(fullfile(g.conf.path.regions, city, g.anno.object.region{i}));
+bRegion = opt_path1;
 
+
+% Add a red boundary on the buildings
 if g.edgeOverlay,
-    % Add a red boundary on the buildings
     ee = (labels == 0);
     ee = imdilate(ee,g.se); 
     im(ee > 0) = 255;
 end
 
 % Plot the image and the boundaries
+figure(1); clf;
 vl_tightsubplot(1,2,1);
 imagesc(im); axis image off; hold on;
 
-% Display the seeds as well
+% Plot upper and lower tiers
+plot(1:size(bRegion,1), bRegion(:,1),'w-','LineWidth', 4);
+plot(1:size(bRegion,1), bRegion(:,1),'b--','LineWidth',4);
+
+plot(1:size(bRegion,1), bRegion(:,2),'w-','LineWidth', 4);
+plot(1:size(bRegion,1), bRegion(:,2),'b--','LineWidth',4);
+
+% Display the seeds if enabled
 if g.showSeeds, 
     load(fullfile(g.conf.path.seeds, city, g.anno.object.seeds{i}));
     for s = 1:length(fgpixels), 
         plot(fgpixels{s}(:,1), fgpixels{s}(:,2), 'y.');
     end
 end
-handle=title(sprintf('city:%s (%i/%i)  image: %i/%i imageSet:%i', city, ...
+handle=title(sprintf('City: %s (%i/%i)  Image: %i/%i ImageSet:%i', city, ...
                          g.anno.object.cityId(i), max(g.anno.object.cityId), ...
                          i, length(g.anno.object.image), ...
                          g.anno.object.imageSet(i)));
@@ -89,5 +103,5 @@ set(handle, 'Interpreter','none');
 % Plot the segmentation labels
 vl_tightsubplot(1,2,2);
 imagesc(labels); axis image off;
-title('Segmentation');
+title('Ground truth labels');
 colormap(hot);
