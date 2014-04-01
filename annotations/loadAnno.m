@@ -44,6 +44,10 @@ for i = 1:length(imageSets),
     anno.object.imageSet(cityId & imageId) = i;
 end
 
+% Keep only those images with valid ids
+valid = anno.object.imageSet > 0;
+anno = selectAnno(anno, valid);
+
 % List the names of the cities
 function cities = getCities(conf)
 f = dir(conf.path.image);
