@@ -29,6 +29,13 @@ data.seed2label = seed2label;
 data.label2seed = label2seed;
 assert(all(data.seed2label >= 0));
 
+% Compute gtLabel for the foreground (1 bg, 2:N+1 each building)
+data.gtLabels = ones(size(data.labels),'uint32');
+for i = 1:length(data.seeds), 
+    labelId = seed2label(i);
+    data.gtLabels(data.labels == labelId) = i + 1;
+end
+
 
 function newPath = sanitizePath(path)
 newPath(:,1) = min(path(:,1), path(:,2));
