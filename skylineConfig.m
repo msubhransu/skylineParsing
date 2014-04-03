@@ -9,3 +9,7 @@ conf.path.regions = fullfile(conf.path.dataset, 'regions');
 conf.path.seeds = fullfile(conf.path.dataset, 'seeds');
 conf.path.imageSet = fullfile(conf.path.dataset, 'imageSets');
 
+
+% SLIC segmentation params
+conf.slic.regionSize = 30;
+conf.slic.regularizer = 0.001;
