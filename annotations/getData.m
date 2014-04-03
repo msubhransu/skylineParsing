@@ -11,7 +11,7 @@ load(fullfile(conf.path.seeds, city, anno.object.seeds{i}));
 data.city = city;
 data.im = im;
 data.labels = labels;
-data.region = opt_path1;
+data.region = sanitizePath(opt_path1);
 data.seeds = fgpixels;
 
 % Assign labels to seeds (and vice versa)
@@ -27,4 +27,14 @@ for i = 1:numSeeds,
 end
 data.seed2label = seed2label;
 data.label2seed = label2seed;
-assert(all(data.seed2label >= 0));    
+assert(all(data.seed2label >= 0));
+
+
+function newPath = sanitizePath(path)
+newPath(:,1) = min(path(:,1), path(:,2));
+newPath(:,2) = max(path(:,1), path(:,2));
+
+% If paths touch then add a small margin
+touching = newPath(:,2) - newPath(:,1) < 3; 
+newPath(touching,1) = newPath(touching,1) - 2;
+newPath(touching,2) = newPath(touching,2) + 2;
