@@ -2,4 +2,13 @@
 % directories
 
 addpath annotations;
-addpath textons;
+addpath extern/pbDetector;
+addpath extern/textons;
+disp('Added paths..\n');
+
+% Set this to the path of the VLFEAT
+vlFeatPath='../../vlfeat';
+run([vlFeatPath '/toolbox/vl_setup.m']);
+disp('Setup vlfeat');
+
+disp('Startup done.');

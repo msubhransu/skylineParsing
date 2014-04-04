@@ -24,3 +24,8 @@ conf.param.texton.k  = 32;     % number of textons in the library
 conf.param.texton.radius = 20; % radius of region for histogram computation
 
 
+conf.param.color.numGMMClusters = 3;
+conf.param.texture.numGMMClusters = 3;
+
+conf.param.alpha = 0.3;
+conf.param.beta = 0.5;
