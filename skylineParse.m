@@ -86,8 +86,16 @@ score.combined(fginds) = maxVal;
 % Cost of labelling background is high
 for i=2:numLabels,
     bginds = sub2ind(size(score.combined), bgi, bgj, double(i)*ones(size(bgi)));
+    [fgi, fgj] = ind2sub(size(data.labels), find(data.segLabel==i));
+    fginds = sub2ind(size(score.combined), fgi, fgj, double(i)*ones(size(fgi)));
     score.combined(bginds) = 0;
+    score.combined(fginds) = 0;
 end
+
+% Ignore these for memory 
+score.color = [];
+score.texture = [];
+score.spatial = [];
 
 %--------------------------------------------------------------------------
 %                                                     Compute spatial terms
