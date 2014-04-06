@@ -48,6 +48,14 @@ while(1),
             g.edgeOverlay = ~g.edgeOverlay;
         case 's'
             g.showSeeds = ~g.showSeeds;
+        case 'g' %jump to a specified image index
+            answer = str2double(inputdlg('Enter index:'));
+            if(~isempty(answer))
+                answer = round(answer);
+                if(answer > 0 && answer <= numImages)
+                    g.curId = answer;
+                end
+            end
     end
 end
 
@@ -96,5 +104,5 @@ set(handle, 'Interpreter','none');
 % Plot the segmentation labels
 vl_tightsubplot(1,2,2);
 imagesc(data.labels); axis image off;
-title('Ground truth labels');
+title(sprintf('Ground truth labels (%i x %i px)', size(data.labels,2), size(data.labels,1)));
 colormap(hot);
