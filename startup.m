@@ -2,6 +2,7 @@
 % directories
 
 addpath annotations;
+addpath parse;
 addpath extern/pbDetector;
 addpath extern/textons;
 disp('Added paths..\n');

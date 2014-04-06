@@ -29,3 +29,13 @@ conf.param.texture.numGMMClusters = 3;
 
 conf.param.alpha = 0.3;
 conf.param.beta = 0.5;
+
+
+% Params for MRF
+conf.param.pairwise.gamma = 1; % Affinity scores
+conf.param.pairwise.lambda = 0.7; % Unary and pairwise term tradeoff
+
+% Compute costs
+conf.param.building.maxWidth = 50;
+conf.param.building.step = 1; % Step size for search of rectangles
+conf.param.building.minWidth = 15;
