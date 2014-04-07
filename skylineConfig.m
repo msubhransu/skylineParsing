@@ -10,6 +10,13 @@ conf.path.seeds = fullfile(conf.path.dataset, 'seeds');
 conf.path.imageSet = fullfile(conf.path.dataset, 'imageSets');
 conf.path.texton = fullfile(conf.path.dataset, 'textons');
 
+
+% Display
+conf.display = true;
+
+% Image parameters
+conf.param.image.maxPixels = 3e6;
+
 % SLIC segmentation params
 conf.param.slic.regionSize = 30;
 conf.param.slic.regularizer = 0.001;
@@ -23,19 +30,21 @@ conf.param.texton.el = 2;      %
 conf.param.texton.k  = 32;     % number of textons in the library
 conf.param.texton.radius = 20; % radius of region for histogram computation
 
-
+% Unary potential terms
 conf.param.color.numGMMClusters = 3;
 conf.param.texture.numGMMClusters = 3;
-
 conf.param.alpha = 0.3;
 conf.param.beta = 0.5;
 
-
-% Params for MRF
+% Pairwise potential terms
 conf.param.pairwise.gamma = 1; % Affinity scores
-conf.param.pairwise.lambda = 0.7; % Unary and pairwise term tradeoff
+conf.param.pairwise.lambda = 0.1; % Unary and pairwise term tradeoff
 
-% Compute costs
+
+% Paramters for buildings
 conf.param.building.maxWidth = 50;
-conf.param.building.step = 1; % Step size for search of rectangles
 conf.param.building.minWidth = 15;
+
+% Search parameters for rectangle search
+conf.param.building.search.step = 3; % Step size for search of rectangles
+conf.param.building.search.deltay = 25; % Allow upper boundary of the rectangle to go higher
