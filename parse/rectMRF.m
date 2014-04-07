@@ -36,7 +36,7 @@ initParse = parse;
 label = parse2label(initParse,data);
 fprintf('%.2fs intial parse..',toc);
 
-% Refine the rectangles using alpha expansion
+% Refine the rectangles
 tic;
 maxIter = 2*numBuildings;
 for i = 1:maxIter,
@@ -277,4 +277,3 @@ for i = 1:length(taken)
     end
 end
 [dmin, ind] = min(dy);
-

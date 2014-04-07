@@ -15,7 +15,7 @@ conf.path.texton = fullfile(conf.path.dataset, 'textons');
 conf.display = true;
 
 % Image parameters
-conf.param.image.maxPixels = 3e6;
+conf.param.image.maxDim = 2500; % Set the maximum dimension to this for speed
 
 % SLIC segmentation params
 conf.param.slic.regionSize = 30;
@@ -46,5 +46,5 @@ conf.param.building.maxWidth = 50;
 conf.param.building.minWidth = 15;
 
 % Search parameters for rectangle search
-conf.param.building.search.step = 3; % Step size for search of rectangles
+conf.param.building.search.step = 1; % Step size for search of rectangles
 conf.param.building.search.deltay = 25; % Allow upper boundary of the rectangle to go higher
