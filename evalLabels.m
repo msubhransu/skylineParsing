@@ -19,7 +19,7 @@ common = reshape(counts, np, ng);
 overlaps = zeros(np, ng);
 for i = 1:np,
     for j = 1:ng, 
-        overlaps(i,j) = common(i,j)/(areap(i) + areag(j)-common(i,j));
+        overlaps(i,j) = common(i,j)/(areap(i) + areag(j)-common(i,j)+eps);
     end
 end
 
