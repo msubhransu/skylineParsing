@@ -69,6 +69,7 @@ global g;
 i = g.curId;
 
 data = getData(g.conf, g.anno, i);
+%data = resizeData(data, 0.3);
 
 % Add a red boundary on the buildings
 if g.edgeOverlay,
