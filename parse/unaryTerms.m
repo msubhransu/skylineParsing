@@ -19,24 +19,22 @@ bgMask = data.segLabel == 1;
 [fgi, fgj] = ind2sub([size(data.labels,1) size(data.labels,2)], find(~bgMask));
 
 % Set all the scores appropriately for the background regions
-maxVal = max(unary.combined(:));
-minVal = min(unary.combined(:));
+maxVal = max(abs(unary.combined(:)));
 numLabels = max(data.segLabel(:));
 
 bginds = sub2ind(size(data.labels), bgi, bgj, ones(size(bgi)));
 fginds = sub2ind(size(data.labels), fgi, fgj, ones(size(fgi)));
 
 % Label 1 is background
-unary.combined(bginds) = minVal;
+unary.combined(bginds) = -maxVal;
 unary.combined(fginds) = maxVal;
 
-% Cost of labelling background is high
+% Cost of labelling background is high, seeds is low
 for i=2:numLabels,
-    bginds = sub2ind(size(unary.combined), bgi, bgj, double(i)*ones(size(bgi)));
-    [fgi, fgj] = ind2sub(size(data.labels), find(data.segLabel==i));
-    fginds = sub2ind(size(unary.combined), fgi, fgj, double(i)*ones(size(fgi)));
-    unary.combined(bginds) = maxVal;
-    unary.combined(fginds) = minVal;
+    thisSeeds = data.seeds{i-1};
+    numSeeds = size(thisSeeds,1);
+    seedinds = sub2ind(size(unary.combined), thisSeeds(:,2), thisSeeds(:,1), double(i)*ones(numSeeds,1));
+    unary.combined(seedinds) = -maxVal*100;
 end
 
 % Ignore these for memory reasons
@@ -82,20 +80,15 @@ fprintf(' Color (LAB space):');
 uniformNegLogLikelihood = -log(1e-4); %all colors are equally likely?
 
 % Compute negative log likelihood for all the regions
-for i = 1:numLabels,
+for i = 2:numLabels,
+    fprintf('.');
     numPixels = sum(labels == i);
     if numPixels < conf.param.color.numGMMClusters*4,
         score(fgMask, i) = uniformNegLogLikelihood;
         continue;
     end
     regionFeat = feat(labels==i, :);
-
-    % Compute centers using k-means
-    if i == 1,
-        numCenters = 10;
-    else
-        numCenters = conf.param.color.numGMMClusters;
-    end
+    numCenters = conf.param.color.numGMMClusters;
     [ctr, id] = vl_kmeans(regionFeat', numCenters, 'distance', 'l2', 'algorithm', 'elkan');
     ctr = ctr'; id = id';
     numCtr = size(ctr, 1);
@@ -112,7 +105,6 @@ for i = 1:numLabels,
     end
     fgDist = clustDistMembership(fgFeat, ctrs, covs, wts);
     score(fgMask,i) = fgDist/norm(fgDist);
-    fprintf('.');
 end
 score = reshape(score,[size(labels,1) size(labels,2) numLabels]);
 fprintf('[done] %.2fs elapsed.\n', toc);
@@ -153,21 +145,15 @@ fprintf(' Texture (Textons):');
 uniformDistance = 0.5; %all textures
 
 % Compute negative log likelihood for all the regions
-for i = 1:numLabels,
+for i = 2:numLabels,
+    fprintf('.');
     numPixels = sum(labels == i);
     if numPixels < conf.param.texture.numGMMClusters*4,
         score(fgMask, i) = uniformDistance;
         continue;
     end
     regionFeat = feat(labels==i, :);
-
-    % Compute centers using k-means
-    if i == 1,
-        numCenters = 10;
-    else
-        numCenters = conf.param.color.numGMMClusters;
-    end
-    
+    numCenters = conf.param.color.numGMMClusters;
     [ctr, id] = vl_kmeans(regionFeat', numCenters, 'distance', 'l2', 'algorithm', 'elkan');
     ctr = ctr'; id = id';
     numCtr = size(ctr, 1);
@@ -185,7 +171,6 @@ for i = 1:numLabels,
 
     fgDist = textureDistMembership(fgFeat, ctrs);
     score(fgMask,i) = fgDist/norm(fgDist);
-    fprintf('.');
 end
 score = reshape(score,[size(labels,1) size(labels,2) numLabels]);
 fprintf('[done] %.2fs elapsed.\n', toc);
