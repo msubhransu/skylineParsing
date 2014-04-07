@@ -8,3 +8,4 @@ for i = length(parse.order)-1:-1:1
     plot(1:w, parse.tiers(parse.order(i),:),'r-','LineWidth',2);
 end
 plot(1:w, parse.bottom,'r-','LineWidth',2);
+    
