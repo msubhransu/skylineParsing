@@ -1,4 +1,4 @@
-function [parse, data] = skylineParse(conf, data)
+function [parses, data] = skylineParse(conf, data)
 [h, w, ~] = size(data.im);
 scale = 1;
 if max(h,w) > conf.param.image.maxDim
@@ -29,5 +29,5 @@ data.pairwise = pairwiseTerms(conf.param.pairwise.gamma, data.image.lab);
 
 % Parse buildings into rectangles
 fprintf('Rectangular parsing..');
-parse = rectMRF(conf, data);
-parse.size = [h w];
+parses = rectMRF(conf, data);
+parses.size = [h w];

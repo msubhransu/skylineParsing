@@ -1,4 +1,4 @@
-function [parse, initParse] = rectMRF(conf, data)
+function parses = rectMRF(conf, data)
 seeds = data.seeds;
 numBuildings = length(seeds);
 [~, w, numUnary] = size(data.unary.combined);
@@ -33,17 +33,17 @@ while any(~taken),
         title(sprintf('Initial parse, building %i/%i\n', sum(taken), numBuildings));
     end
 end
-
-initParse = parse;
-label = parse2label(initParse,data);
+parses.initial = parse;
+label = parse2label(parses.initial,data);
 fprintf('%.2fs intial parse..',toc);
 
-% Refine the rectangles
+
+% Refine the rectangles using tiered labelling
 tic;
 maxIter = 2*numBuildings;
 for i = 1:maxIter,
     ind = parse.order(mod(i-1, numBuildings)+1);
-    buildingUpper = refineRectangle(conf, data, parse, ind, label);
+    buildingUpper = refineTiers(conf, data, parse, ind, label);
     parse = updateParse(buildingUpper, parse, ind);
     label = parse2label(parse, data);
     
@@ -54,6 +54,28 @@ for i = 1:maxIter,
         title(sprintf('Refining parse, iter %i/%i\n', i, maxIter));
     end
 end
+parses.tiered = parse;
+fprintf('%.2fs refinement.\n',toc);
+
+% Refine the rectangles
+label = parse2label(parses.initial, data);
+parse = parses.initial;
+tic;
+maxIter = 2*numBuildings;
+for i = 1:maxIter,
+    ind = parse.order(mod(i-1, numBuildings)+1);
+    buildingUpper = refineRectangle(conf, data, parse, ind, label);
+    parse = updateParse(buildingUpper, parse, ind);
+    label = parse2label(parse, data);
+
+    % Display progress
+    if conf.display
+        figure(1); clf;
+        showParse(data.im, parse);
+        title(sprintf('Refining parse, iter %i/%i\n', i, maxIter));
+    end
+end
+parses.rect = parse;
 fprintf('%.2fs refinement.\n',toc);
 
 %--------------------------------------------------------------------------
