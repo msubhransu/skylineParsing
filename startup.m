@@ -3,6 +3,7 @@
 
 addpath annotations;
 addpath parse;
+addpath evaluation;
 addpath extern/pbDetector;
 addpath extern/textons;
 disp('Added paths..\n');
