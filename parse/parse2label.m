@@ -3,9 +3,9 @@ function label = parse2label(parse, data)
 label  = ones(h,w,'uint32');
 order  = parse.order;
 tiers  = parse.tiers;
-bottom = parse.bottom;
+tierLower = parse.lower;
 
-tiers = [tiers; bottom];
+tiers = [tiers; tierLower];
 order = [size(tiers,1); order];
 
 for i = 1:size(tiers,1)-1

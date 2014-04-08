@@ -7,5 +7,5 @@ plot(1:w, parse.tiers(parse.order(end),:),'g-','LineWidth',2);
 for i = length(parse.order)-1:-1:1 
     plot(1:w, parse.tiers(parse.order(i),:),'r-','LineWidth',2);
 end
-plot(1:w, parse.bottom,'r-','LineWidth',2);
+plot(1:w, parse.lower,'r-','LineWidth',2);
     
