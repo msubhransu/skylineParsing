@@ -39,7 +39,7 @@ lambda = conf.param.pairwise.lambda;
 minWidth = conf.param.building.minWidth;
 sxmin = min(xx-xmin+1);
 sxmax = max(xx-xmin+1);
-symin = min(yy-ymin)-1;
+symin = min(yy-ymin-1);
 
 bestRect = mexOptRectangle(cu,cpy,cpx,lambda,thisUpper,thisLower,minWidth,sxmin,sxmax,symin,stepSize);
 % Pick the best one

@@ -23,6 +23,7 @@ while any(~taken),
     buildingUpper = initUpperBoundary(conf, data, currLower, tierUpper, ind);
     currLower = buildingUpper;
     currUpper = min(currUpper, currLower);
+    tierUpper = min(currUpper, tierUpper);
     parse.tiers(ind, :) = currLower;
     taken(ind) = true;
     parse.order = [parse.order; ind];
@@ -66,3 +67,4 @@ for i = 2:length(parse.order),
     below = parse.order(i-1);
     parse.tiers(this,:) = min(parse.tiers(this,:), parse.tiers(below,:));
 end
+parse.upper = min(parse.tiers(parse.order(end),:), parse.upper);
