@@ -45,68 +45,41 @@ else
     prevInd = parse.order(orderInd-1);
     prevUpper = parse.tiers(prevInd,:);
 end
-thisUpper = parse.upper(xmin:xmax)-ymin+1;
-thisLower = prevUpper(xmin:xmax)-ymin+1;
+thisUpper = single(parse.upper(xmin:xmax)-ymin+1);
+thisLower = single(prevUpper(xmin:xmax)-ymin+1);
 
 % Calculate culumative sums for speed
 u = fg-bg;
-
 px = data.pairwise.xx(ymin:ymax,xmin:xmax);
 py = data.pairwise.yy(ymin:ymax,xmin:xmax);
 for i = 1:size(px,2)
     u(thisLower(i):end,i) = 0;
     px(thisLower(i):end,i) = 0;
 end
-
 u1 = cumsum(u, 2);
 u2 = cumsum(u1(end:-1:1,:), 1);
 cu = u2(end:-1:1,:);
-
 cpy = cumsum(py, 2);
 cpx = cumsum(px(end:-1:1,:),1);
 cpx = cpx(end:-1:1,:);
 
-stepSize = conf.param.building.search.step;
 
-rects = [];
-costs = [];
-count = 1;
+% Start search over all rectangles
+stepSize = conf.param.building.search.step;
 lambda = conf.param.pairwise.lambda;
-for left = (xmin:stepSize:min(xx))-xmin+1,
-    for right = (max(xx):stepSize:xmax)-xmin+1, 
-        if right-left < conf.param.building.minWidth 
-            continue;
-        end
-        thisy1 = min(thisUpper(left:right));
-        thisy2 = min(max(thisLower(left:right)),min(yy-ymin)-1);
-        for top = thisy1:stepSize:thisy2,
-                rects(:,count) = [left;top;right];
-                unaryCost = cu(top, right) - cu(top, left);
-                pairwiseCost = cpy(top,right) - cpy(top,left) + cpx(top,left)  + cpx(top,right);
-                costs(count) = (1-lambda)*unaryCost + lambda*pairwiseCost;
-                count = count + 1;
-        end
-    end
-end
+minWidth = conf.param.building.minWidth;
+sxmin = min(xx-xmin+1);
+sxmax = max(xx-xmin+1);
+symin = min(yy-ymin)-1;
+
+bestRect = mexOptRectangle(cu,cpy,cpx,lambda,thisUpper,thisLower,minWidth,sxmin,sxmax,symin,stepSize);
 % Pick the best one
-[~,best] = min(costs);
-if ~isempty(best),
-    bestRect = rects(:,best);
+if bestRect(1) > 0,
     buildingUpper = prevUpper;
     buildingUpper(bestRect(1)+xmin:bestRect(3)+xmin-1) = bestRect(2)+ymin-1;
 else
     buildingUpper = prevUpper;
 end
-buildingUpper = min(buildingUpper, prevUpper);
-%figure(1); clf;
-%imagesc(data.im(ymin:ymax, xmin:xmax,:)); 
-%axis image off;
-%hold on; 
-%plot(1:length(prevSoln), prevSoln,'k-', 'LineWidth',2);
-%plot(1:length(prevSoln), buildingUpper(xmin:xmax)-ymin+1,'r-','LineWidth',2);
-%plot(1:length(prevSoln), thisLower,'b-','LineWidth',2);
 
-%keyboard;
-%imagesc(data.im); axis image; hold on;
-%plot(1:w, buildingUpper,'g-');
-%plot(1:w, prevUpper,'r-');
+% Sanity check
+buildingUpper = min(buildingUpper, prevUpper);
