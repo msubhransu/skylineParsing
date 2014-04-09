@@ -15,8 +15,8 @@ other = 1:size(data.unary.combined,3);
 other(other==unaryInd) = []; other(other == 1) = [];
 fg = data.unary.combined(ymin:ymax,xmin:xmax,unaryInd);
 bg = min(data.unary.combined(ymin:ymax,xmin:xmax,other),[],3);
-thisUpper = upperb(xmin:xmax)-ymin+1;
-thisLower = lowerb(xmin:xmax)-ymin+1;
+thisUpper = single(upperb(xmin:xmax)-ymin+1);
+thisLower = single(lowerb(xmin:xmax)-ymin+1);
 
 % Calculate culumative sums for unaries and vertical/horizontal pairwise
 u = fg-bg;
@@ -33,39 +33,22 @@ cpy = cumsum(py, 2);
 cpx = cumsum(px(end:-1:1,:),1);
 cpx = cpx(end:-1:1,:);
 
-% Search step size (hint: for speed make this larger)
+% Start search over all rectangles
 stepSize = conf.param.building.search.step;
-
-% Loop over all rectangles and pick the optimal one
-rects = [];
-costs = [];
 lambda = conf.param.pairwise.lambda;
-count = 1;
-for left = (xmin:stepSize:min(xx))-xmin+1,
-    for right = (max(xx):stepSize:xmax)-xmin+1, 
-        if right-left < conf.param.building.minWidth 
-            continue;
-        end
-        thisy1 = min(thisUpper(left:right));
-        thisy2 = min(max(thisLower(left:right)),min(yy-ymin)-1);
-        for top = thisy1:stepSize:thisy2,
-                unaryCost = cu(top, right) - cu(top, left);
-                pairwiseCost = cpy(top,right) - cpy(top,left) + cpx(top,left) + cpx(top,right);
-                thisCost = (1-lambda)*unaryCost + lambda*pairwiseCost;
-                rects(:, count) = [left; top; right];
-                costs(count) = thisCost;
-                count = count + 1;
-        end
-    end
-end
+minWidth = conf.param.building.minWidth;
+sxmin = min(xx-xmin+1);
+sxmax = max(xx-xmin+1);
+symin = min(yy-ymin)-1;
 
-% Assign all the best indices
-[~, bestInd] = min(costs);
-if ~isempty(bestInd)
-    bestRect = rects(:,bestInd);
+bestRect = mexOptRectangle(cu,cpy,cpx,lambda,thisUpper,thisLower,minWidth,sxmin,sxmax,symin,stepSize);
+% Pick the best one
+if bestRect(1) > 0,
     buildingUpper = lowerb;
     buildingUpper(bestRect(1)+xmin:bestRect(3)+xmin-1) = bestRect(2)+ymin-1;
 else
     buildingUpper = lowerb;
 end
+
+% Sanity check
 buildingUpper = min(buildingUpper, lowerb);
