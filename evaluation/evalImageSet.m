@@ -15,8 +15,8 @@ for i = 1:numImages,
     gtLabels = data.gtLabels;
 
     % Rectangular parse
-    [parse, data] = skylineParse(conf, data);
-    evals = evalLabels(parse2label(parse, data), gtLabels);
+    [parses, data] = skylineParse(conf, data);
+    evals = evalLabels(parse2label(parses.rect, data), gtLabels);
     scores.mao.rect(i) = evals.mao;
     
     % Get SLIC parse (seeds projected to slic regions)
