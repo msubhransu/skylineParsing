@@ -63,8 +63,8 @@ void getOptRectangle(int nlhs, mxArray *plhs[], const mxArray *prhs[]){
   int stepSize = (int)*mxGetPr(prhs[10]);
   
   // Width and Height of the tables
-  int h  = mxGetM(prhs[0]);
-  int w  = mxGetN(prhs[1]);
+  int h  = (int)mxGetM(prhs[0]);
+  int w  = (int)mxGetN(prhs[1]);
 
   double minScore = 1e10; // large value
   double unaryScore, pairwiseScore, score;
@@ -75,8 +75,8 @@ void getOptRectangle(int nlhs, mxArray *plhs[], const mxArray *prhs[]){
   int count = 0;
   for(l = 0; l < xmin;l+=stepSize){
     for(r = MAX(xmax,l+width); r < w; r+=stepSize){
-      tmin = getMinVal(upperb, l, r)-1;
-      tmax = MIN(getMaxVal(lowerb, l, r), ymin)-1;
+      tmin = (int)getMinVal(upperb, l, r)-1;
+      tmax = (int)MIN(getMaxVal(lowerb, l, r), ymin)-1;
       
       for(t = tmin; t <= tmax; t+=stepSize){
 	li = l*h + t; 
