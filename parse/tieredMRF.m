@@ -1,4 +1,4 @@
-function parses = rectangleMRF(conf, data)
+function parses = tieredMRF(conf, data)
 seeds = data.seeds;
 numBuildings = length(seeds);
 [~, w, numUnary] = size(data.unary.combined);
@@ -23,6 +23,7 @@ while any(~taken),
     buildingUpper = initUpperBoundary(conf, data, currLower, tierUpper, ind);
     currLower = buildingUpper;
     currUpper = min(currUpper, currLower);
+    tierUpper = min(currUpper, tierUpper);
     parse.tiers(ind, :) = currLower;
     taken(ind) = true;
     parse.order = [parse.order; ind];
@@ -34,11 +35,11 @@ while any(~taken),
     end
 end
 parses.initial = parse;
-label = parse2label(parses.initial,data);
-fprintf('%.2fs intial parse..',toc);
+fprintf('Tiered parsing: %.2fs intial parse..',toc);
 
 
 % Refine the rectangles using tiered labelling
+label = parse2label(parses.initial, data);
 tic;
 maxIter = 2*numBuildings;
 for i = 1:maxIter,
@@ -46,7 +47,6 @@ for i = 1:maxIter,
     buildingUpper = refineTiers(conf, data, parse, ind, label);
     parse = updateParse(buildingUpper, parse, ind);
     label = parse2label(parse, data);
-    
     % Display progress
     if conf.display
         figure(1); clf;
@@ -55,27 +55,6 @@ for i = 1:maxIter,
     end
 end
 parses.tiered = parse;
-fprintf('%.2fs refinement.\n',toc);
-
-% Refine the rectangles
-label = parse2label(parses.initial, data);
-parse = parses.initial;
-tic;
-maxIter = 2*numBuildings;
-for i = 1:maxIter,
-    ind = parse.order(mod(i-1, numBuildings)+1);
-    buildingUpper = refineRectangle(conf, data, parse, ind, label);
-    parse = updateParse(buildingUpper, parse, ind);
-    label = parse2label(parse, data);
-
-    % Display progress
-    if conf.display
-        figure(1); clf;
-        showParse(data.im, parse);
-        title(sprintf('Refining parse, iter %i/%i\n', i, maxIter));
-    end
-end
-parses.rect = parse;
 fprintf('%.2fs refinement.\n',toc);
 
 %--------------------------------------------------------------------------
@@ -88,3 +67,4 @@ for i = 2:length(parse.order),
     below = parse.order(i-1);
     parse.tiers(this,:) = min(parse.tiers(this,:), parse.tiers(below,:));
 end
+parse.upper = min(double(parse.tiers(parse.order(end),:)), parse.upper);

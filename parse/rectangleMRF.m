@@ -11,6 +11,7 @@ tierUpper = data.region(:,1)';
 parse.lower = tierLower;
 parse.upper = tierUpper;
 parse.tiers = zeros(numBuildings, w, 'uint16');
+parse.rect = zeros(numBuildings, 3, 'double');
 parse.order = [];
 taken = false(1, numBuildings);
 
@@ -20,11 +21,12 @@ currUpper = tierUpper;
 tic;
 while any(~taken), 
     ind = findBottomBuilding(currLower, seeds, taken);
-    buildingUpper = initUpperBoundary(conf, data, currLower, tierUpper, ind);
+    [buildingUpper, rect] = initUpperBoundary(conf, data, currLower, tierUpper, ind);
     currLower = buildingUpper;
     currUpper = min(currUpper, currLower);
     tierUpper = min(currUpper, tierUpper);
     parse.tiers(ind, :) = currLower;
+    parse.rect(ind, :) = rect;
     taken(ind) = true;
     parse.order = [parse.order; ind];
     % Display progress
@@ -35,7 +37,7 @@ while any(~taken),
     end
 end
 parses.initial = parse;
-fprintf('%.2fs intial parse..',toc);
+fprintf('Rectangular parsing: %.2fs intial parse..',toc);
 
 % Refine the rectangles
 label = parse2label(parses.initial, data);
@@ -44,8 +46,8 @@ tic;
 maxIter = 2*numBuildings;
 for i = 1:maxIter,
     ind = parse.order(mod(i-1, numBuildings)+1);
-    buildingUpper = refineRectangle(conf, data, parse, ind, label);
-    parse = updateParse(buildingUpper, parse, ind);
+    [buildingUpper, rect] = refineRectangle(conf, data, parse, ind, label);
+    parse = updateParse(buildingUpper, parse, rect, ind);
     label = parse2label(parse, data);
 
     % Display progress
@@ -56,12 +58,35 @@ for i = 1:maxIter,
     end
 end
 parses.rect = parse;
+fprintf('%.2fs adjustment...',toc);
+
+% Refine the upper boundaries of the rectangles
+label = parse2label(parse, data);
+tic;
+maxIter = numBuildings;
+for i = 1:maxIter,
+    ind = parse.order(mod(i-1, numBuildings)+1);
+    buildingUpper = refineTiers(conf, data, parse, ind, label, true);
+    parse = updateParse(buildingUpper, parse, parse.rect(ind, :), ind);
+    label = parse2label(parse, data);
+
+    % Display progress
+    if conf.display
+        figure(1); clf;
+        showParse(data.im, parse);
+        title(sprintf('Refining parse, iter %i/%i\n', i, maxIter));
+    end
+end
+parses.refined = parse;
 fprintf('%.2fs refinement.\n',toc);
+
+
 %--------------------------------------------------------------------------
 %                                                           Upate the parse
 %--------------------------------------------------------------------------
-function parse = updateParse(buildingUpper, parse, ind)
+function parse = updateParse(buildingUpper, parse, rect, ind)
 parse.tiers(ind,:) = buildingUpper;
+parse.rect(ind, :) = rect;
 for i = 2:length(parse.order), 
     this = parse.order(i);
     below = parse.order(i-1);

@@ -48,3 +48,4 @@ conf.param.building.minWidth = 15;
 % Search parameters for rectangle search
 conf.param.building.search.step = 1; % Step size for search of rectangles
 conf.param.building.search.deltay = 25; % Allow upper boundary of the rectangle to go higher
+conf.param.building.search.delta = 10; % Allow upper boundary of the rectangle to go higher

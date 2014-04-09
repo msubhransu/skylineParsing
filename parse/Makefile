@@ -1,6 +1,6 @@
 # This Makefile is used under Linux
 
-MATLABDIR ?= /Applications/MATLAB_R2011a.app
+MATLABDIR ?= /opt/matlab
 CXX ?= g++
 CFLAGS = -Wall -Wconversion -O3 -fPIC -I$(MATLABDIR)/extern/include
 
@@ -12,7 +12,10 @@ MEX_EXT = $(shell $(MATLABDIR)/bin/mexext)
 
 all:    binary
 
-binary: mexOptRectangle
+binary: mexOptRectangle mexOptTiered
 
 mexOptRectangle: mexOptRectangle.cc
 	$(MEX) $(MEX_OPTION) mexOptRectangle.cc
+
+mexOptTiered: mexOptTiered.cc
+	$(MEX) $(MEX_OPTION) mexOptTiered.cc

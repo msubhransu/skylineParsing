@@ -1,4 +1,4 @@
-function  buildingUpper = initUpperBoundary(conf, data, lowerb, upperb, ind)
+function  [buildingUpper, rect] = initUpperBoundary(conf, data, lowerb, upperb, ind)
 % Compute the bounds of this seed and region of interest
 [h,w,~]=size(data.unary.combined);
 thisSeed = data.seeds{ind};
@@ -46,8 +46,10 @@ bestRect = mexOptRectangle(cu,cpy,cpx,lambda,thisUpper,thisLower,minWidth,sxmin,
 if bestRect(1) > 0,
     buildingUpper = lowerb;
     buildingUpper(bestRect(1)+xmin:bestRect(3)+xmin-1) = bestRect(2)+ymin-1;
+    rect = bestRect;
 else
     buildingUpper = lowerb;
+    rect = [-1 -1 -1]; % no rectangle found
 end
 
 % Sanity check

@@ -1,4 +1,4 @@
-function buildingUpper = refineRectangle(conf, data, parse, ind, label)
+function [buildingUpper, rect] = refineRectangle(conf, data, parse, ind, label)
 % Compute the bounds of this seed and region of interest
 [h,w,~]=size(data.unary.combined);
 thisSeed = data.seeds{ind};
@@ -77,8 +77,10 @@ bestRect = mexOptRectangle(cu,cpy,cpx,lambda,thisUpper,thisLower,minWidth,sxmin,
 if bestRect(1) > 0,
     buildingUpper = prevUpper;
     buildingUpper(bestRect(1)+xmin:bestRect(3)+xmin-1) = bestRect(2)+ymin-1;
+    rect = bestRect;
 else
     buildingUpper = prevUpper;
+    rect = [-1 -1 -1];
 end
 
 % Sanity check

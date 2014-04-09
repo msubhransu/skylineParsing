@@ -1,4 +1,9 @@
-function buildingUpper = refineTiers(conf, data, parse, ind, label)
+function buildingUpper = refineTiers(conf, data, parse, ind, label, constrainTop)
+
+if nargin < 6
+    constrainTop = false;
+end
+
 % Compute the bounds of this seed and region of interest
 [h,w,~]=size(data.unary.combined);
 thisSeed = data.seeds{ind};
@@ -50,17 +55,35 @@ thisLower = prevUpper(xmin:xmax)-ymin+1;
 
 % Calculate culumative sums for speed
 u = fg-bg;
-minVal = min(u(:));
-for i = 1:length(xx), 
-    u(yy(i)-ymin+1:end, xx(i)-xmin+1) = -1e6;
-end
-
 px = data.pairwise.xx(ymin:ymax,xmin:xmax);
 py = data.pairwise.yy(ymin:ymax,xmin:xmax);
 for i = 1:size(px,2)
     u(thisLower(i):end,i) = 0;
     px(thisLower(i):end,i) = 0;
 end
+
+seedUpper = piecewiseBound(xx-xmin+1, yy-ymin+1, size(fg,2), size(fg,1));
+thisLower = min(seedUpper, double(thisLower));
+
+if constrainTop, 
+    currUpper = single(parse.tiers(ind,xmin:xmax)-ymin+1);
+    currRect = parse.rect(ind, :);
+    if currRect(1) > 0
+        topval = currRect(2);
+        cUpper = currUpper;
+        cLower = currUpper;
+        cUpper(currRect(1):currRect(3)) = topval - conf.param.building.search.delta;
+        cLower(currRect(1):currRect(3)) = topval + conf.param.building.search.delta;
+        thisUpper = max(thisUpper, cUpper);
+        thisLower = min(thisLower, cLower);
+        thisUpper = min(thisLower, thisUpper);
+    else
+        buildingUpper = parse.tiers(ind,:);
+        return;
+    end
+end
+
+% Compute a rectangular upper bound from the seeds as well
 u2 = cumsum(u(end:-1:1,:), 1);
 cu = u2(end:-1:1,:);
 cpx = cumsum(px(end:-1:1,:),1);
@@ -68,47 +91,44 @@ cpx = cpx(end:-1:1,:);
 
 lambda = conf.param.pairwise.lambda;
 [h,w] = size(u);
-dptable = inf(h,w, 'single');
-dpprev = zeros(h, w, 'single');
-for i = 1:w,
-    for j = thisUpper(i):thisLower(i),
-        if i == 1,
-            dptable(j,i) = lambda*cu(j,i) + (1-lambda)*(py(j,i) + cpx(j,i));
-        else
-            tmp = inf(1, h);
-            for k = thisUpper(i-1):thisLower(i-1),
-                tmp(k) = dptable(k,i-1) + lambda*cu(j,i) + (1-lambda)*(py(j,i) + abs(cpx(j,i) - cpx(k,i)));
-            end
-            [minVal, minInd] = min(tmp);
-            dpprev(j,i) = minInd;
-            dptable(j,i) = minVal;
-        end
-    end
-end
+[dpscore, dpprev] = mexOptTiered(cu,py,cpx, lambda, single(thisUpper), single(thisLower));
 
 % Pick the best one
-[~,ind] = min(dptable(:,w));
-if ~isinf(dptable(ind,w)),
-    path = ind;
+[~,ind] = min(dpscore(:,w));
+if (dpprev(ind,w)) > 0,
+    optPath = ind;
     for i = w:-1:2, 
          ind = dpprev(ind, i); 
-         path=[ind path]; 
+         optPath=[ind optPath]; 
     end
     buildingUpper = prevUpper;
-    buildingUpper(xmin + (1:w)-1) = path+ymin;
+    buildingUpper(xmin:xmax) = optPath+ymin;
 else
     buildingUpper = prevUpper;
+    optPath = thisLower;
+    buildingUpper(xmin:xmax) = optPath+ymin;
 end
 buildingUpper = min(buildingUpper, prevUpper);
-%figure(1); clf;
-%imagesc(data.im(ymin:ymax, xmin:xmax,:)); 
-%axis image off;
-%hold on; 
-%plot(1:length(prevSoln), prevSoln,'k-', 'LineWidth',2);
-%plot(1:length(prevSoln), buildingUpper(xmin:xmax)-ymin+1,'r-','LineWidth',2);
-%plot(1:length(prevSoln), thisLower,'b-','LineWidth',2);
 
-%keyboard;
-%imagesc(data.im); axis image; hold on;
-%plot(1:w, buildingUpper,'g-');
-%plot(1:w, prevUpper,'r-');
+% figure(2); clf;
+% imagesc(u); axis image off; hold on;
+% plot(thisUpper,'g-');
+% plot(thisLower,'b-');
+% plot(optPath,'k-');
+% pause(1);
+
+function bound = piecewiseBound(x, y, w, h)
+x = round(x);
+y = round(y);
+bound = ones(1, w)*h;
+% Compute the bound at each location 
+for i = 1:length(x)
+    bound(x(i)) = min(bound(x(i)), y(i));
+end
+inds = find(bound < h);
+xmin = min(x);
+xmax = max(x);
+if length(inds) > 1
+    bound1 = interp1(inds, bound(inds), xmin:xmax,'linear');
+    bound(xmin:xmax) = bound1;
+end

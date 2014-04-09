@@ -28,5 +28,4 @@ data.unary = unaryTerms(conf, data);
 data.pairwise = pairwiseTerms(conf.param.pairwise.gamma, data.image.lab);
 
 % Parse buildings into rectangles
-fprintf('Rectangular parsing..');
 parses = rectangleMRF(conf, data);
