@@ -67,4 +67,4 @@ for i = 2:length(parse.order),
     below = parse.order(i-1);
     parse.tiers(this,:) = min(parse.tiers(this,:), parse.tiers(below,:));
 end
-parse.upper = min(parse.tiers(parse.order(end),:), parse.upper);
+parse.upper = min(double(parse.tiers(parse.order(end),:)), parse.upper);
