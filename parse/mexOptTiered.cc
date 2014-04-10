@@ -25,7 +25,7 @@ static void fake_answer(mxArray *plhs[]){
 }
 
 void exit_with_help(){
-  mexPrintf("Usage: [dpscore,dpprev] = mexOptTiered(cu,py,cpx,lambda,upperb,lowerb)");
+  mexPrintf("Usage: [dpscore,dpprev] = mexOptTiered(cu,py,cpx,lambda,upperb,lowerb,tau)");
 }
 
 float abs(float x){
@@ -46,7 +46,8 @@ void getOptRectangle(int nlhs, mxArray *plhs[], const mxArray *prhs[]){
   double lambda = (double)*mxGetPr(prhs[3]);
   float *upperb = (float*)mxGetPr(prhs[4]);
   float *lowerb = (float*)mxGetPr(prhs[5]);
- 
+  double tau = (double)*mxGetPr(prhs[6]);
+
   // Width and height of the tables
   int h  = (int)mxGetM(prhs[0]);
   int w  = (int)mxGetN(prhs[1]);
@@ -68,20 +69,20 @@ void getOptRectangle(int nlhs, mxArray *plhs[], const mxArray *prhs[]){
   }
   
   // Set values for the left most column
-  for(i = upperb[0]-1; i < lowerb[0];i++){
+  for(i = (int)upperb[0]-1; i < (int)lowerb[0];i++){
     dpscore[i] = lambda*cu[i] + (1-lambda)*(py[i] + cpx[i]);
   }
 
   // Dynamic programming from the left to right
   for(j = 1 ; j < w; j++){
-    for(i = upperb[j]-1; i < lowerb[j];i++){
+    for(i = (int)upperb[j]-1; i < (int)lowerb[j];i++){
       minVal = 1e10; 
       minInd = 0;
       r = j*h + i;
-      for(k = upperb[j-1]-1; k < lowerb[j-1]; k++){
+      for(k = (int)upperb[j-1]-1; k < (int)lowerb[j-1]; k++){
 	l = (j-1)*h + k;
 	t = j*h + k;
-	score = dpscore[l] + lambda*cu[r] + (1-lambda)*(py[r] + abs(cpx[r] - cpx[t]));
+	score = dpscore[l] + lambda*cu[r] + (1-lambda)*(py[r] + abs(cpx[r] - cpx[t])) + tau*abs(float(k-j));
 	if (score < minVal){
 	  minVal = score;
 	  minInd = k + 1;
@@ -95,7 +96,7 @@ void getOptRectangle(int nlhs, mxArray *plhs[], const mxArray *prhs[]){
 
 // Entry function
 void mexFunction( int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
-  if(nrhs != 6 || nlhs != 2){
+  if(nrhs != 7 || nlhs != 2){
     exit_with_help();
     fake_answer(plhs);
     return;
