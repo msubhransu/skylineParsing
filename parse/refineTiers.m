@@ -94,28 +94,25 @@ lambda = conf.param.pairwise.lambda;
 [dpscore, dpprev] = mexOptTiered(cu,py,cpx, lambda, single(thisUpper), single(thisLower));
 
 % Pick the best one
-[~,ind] = min(dpscore(:,w));
-if (dpprev(ind,w)) > 0,
-    optPath = ind;
+[~,c] = min(dpscore(:,w));
+if (dpprev(c,w)) > 0,
+    optPath = c;
     for i = w:-1:2, 
-         ind = dpprev(ind, i); 
-         optPath=[ind optPath]; 
+         c = dpprev(c, i); 
+         optPath=[c optPath]; 
     end
     buildingUpper = prevUpper;
-    buildingUpper(xmin:xmax) = optPath+ymin;
+    buildingUpper(xmin:xmax) = optPath+ymin-1;
 else
     buildingUpper = prevUpper;
-    optPath = thisLower;
-    buildingUpper(xmin:xmax) = optPath+ymin;
 end
-buildingUpper = min(buildingUpper, prevUpper);
+buildingUpper = min(double(buildingUpper), double(prevUpper));
 
-% figure(2); clf;
-% imagesc(u); axis image off; hold on;
-% plot(thisUpper,'g-');
-% plot(thisLower,'b-');
-% plot(optPath,'k-');
-% pause(1);
+%figure(2); clf;
+%imagesc(data.im); axis image off; hold on;
+%plot(buildingUpper,'g-');
+%plot(prevUpper,'b-');
+%keyboard;
 
 function bound = piecewiseBound(x, y, w, h)
 x = round(x);

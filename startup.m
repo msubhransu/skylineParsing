@@ -6,7 +6,7 @@ addpath parse;
 addpath evaluation;
 addpath extern/pbDetector;
 addpath extern/textons;
-disp('Added paths..\n');
+disp('Added paths..');
 
 % Set this to the path of the VLFEAT
 vlFeatPath='../../vlfeat';

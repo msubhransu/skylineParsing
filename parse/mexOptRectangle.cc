@@ -75,9 +75,10 @@ void getOptRectangle(int nlhs, mxArray *plhs[], const mxArray *prhs[]){
   int count = 0;
   for(l = 0; l < xmin;l+=stepSize){
     for(r = MAX(xmax,l+width); r < w; r+=stepSize){
+      // Compute the range of the top. It is below the upper tier and above the lower tier and seeds.
       tmin = (int)getMinVal(upperb, l, r)-1;
       tmax = (int)MIN(getMaxVal(lowerb, l, r), ymin)-1;
-      
+      // loop over the top coordinate and compute scores
       for(t = tmin; t <= tmax; t+=stepSize){
 	li = l*h + t; 
 	ri = r*h + t;
