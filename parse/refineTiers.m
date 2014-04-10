@@ -66,14 +66,13 @@ seedUpper = piecewiseBound(xx-xmin+1, yy-ymin+1, size(fg,2), size(fg,1));
 thisLower = min(seedUpper, double(thisLower));
 
 if constrainTop, 
-    currUpper = single(parse.tiers(ind,xmin:xmax)-ymin+1);
+    currUpper = single(prevUpper(xmin:xmax)-ymin+1);
     currRect = parse.rect(ind, :);
     if currRect(1) > 0
-        topval = currRect(2);
         cUpper = currUpper;
         cLower = currUpper;
-        cUpper(currRect(1):currRect(3)) = topval - conf.param.building.search.delta;
-        cLower(currRect(1):currRect(3)) = topval + conf.param.building.search.delta;
+        cUpper(currRect(1):currRect(3)) = -1;
+        cLower(currRect(1):currRect(3)) = inf;
         thisUpper = max(thisUpper, cUpper);
         thisLower = min(thisLower, cLower);
         thisUpper = min(thisLower, thisUpper);
@@ -90,8 +89,9 @@ cpx = cumsum(px(end:-1:1,:),1);
 cpx = cpx(end:-1:1,:);
 
 lambda = conf.param.pairwise.lambda;
+tau = conf.param.building.search.tau;
 [h,w] = size(u);
-[dpscore, dpprev] = mexOptTiered(cu,py,cpx, lambda, single(thisUpper), single(thisLower));
+[dpscore, dpprev] = mexOptTiered(cu, py, cpx, lambda, single(thisUpper), single(thisLower),tau);
 
 % Pick the best one
 [~,c] = min(dpscore(:,w));
@@ -112,7 +112,6 @@ buildingUpper = min(double(buildingUpper), double(prevUpper));
 %imagesc(data.im); axis image off; hold on;
 %plot(buildingUpper,'g-');
 %plot(prevUpper,'b-');
-%keyboard;
 
 function bound = piecewiseBound(x, y, w, h)
 x = round(x);
