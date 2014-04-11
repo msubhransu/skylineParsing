@@ -70,7 +70,7 @@ void getOptRectangle(int nlhs, mxArray *plhs[], const mxArray *prhs[]){
   
   // Set values for the left most column
   for(i = (int)upperb[0]-1; i < (int)lowerb[0];i++){
-    dpscore[i] = lambda*cu[i] + (1-lambda)*(py[i] + cpx[i]);
+    dpscore[i] = (1-lambda)*cu[i] + lambda*(py[i] + cpx[i]);
   }
 
   // Dynamic programming from the left to right
@@ -82,7 +82,7 @@ void getOptRectangle(int nlhs, mxArray *plhs[], const mxArray *prhs[]){
       for(k = (int)upperb[j-1]-1; k < (int)lowerb[j-1]; k++){
 	l = (j-1)*h + k;
 	t = j*h + k;
-	score = dpscore[l] + lambda*cu[r] + (1-lambda)*(py[r] + abs(cpx[r] - cpx[t])) + tau*abs(float(k-j));
+	score = dpscore[l] + (1-lambda)*cu[r] + lambda*(py[r] + abs(cpx[r] - cpx[t])) + tau*abs(float(k-i));
 	if (score < minVal){
 	  minVal = score;
 	  minInd = k + 1;
