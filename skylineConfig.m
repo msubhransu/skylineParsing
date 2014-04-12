@@ -15,7 +15,7 @@ conf.path.texton = fullfile(conf.path.dataset, 'textons');
 conf.display = true;
 
 % Image parameters
-conf.param.image.maxDim = 2500; % Set the maximum dimension to this for speed
+conf.param.image.maxDim = 2000; % Set the maximum dimension to this for speed
 
 % SLIC segmentation params
 conf.param.slic.regionSize = 30;
@@ -38,7 +38,7 @@ conf.param.beta = 0.5;
 
 % Pairwise potential terms
 conf.param.pairwise.gamma = 1; % Affinity scores
-conf.param.pairwise.lambda = 0.1; % Unary and pairwise term tradeoff
+conf.param.pairwise.lambda = 0.01; % Unary and pairwise term tradeoff
 
 
 % Paramters for buildings
