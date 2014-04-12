@@ -20,7 +20,7 @@ bgMask = data.segLabel == 1;
 
 % Set all the scores appropriately for the background regions
 maxVal = max(abs(unary.combined(:)));
-numLabels = max(data.segLabel(:));
+numLabels = length(data.seeds)+1;
 
 bginds = sub2ind(size(data.labels), bgi, bgj, ones(size(bgi)));
 fginds = sub2ind(size(data.labels), fgi, fgj, ones(size(fgi)));
@@ -48,7 +48,7 @@ unary.spatial = [];
 function score = spatialScore(conf, data)
 % Compute the distance from the mean seed pixel
 labels = data.segLabel;
-numLabels = max(labels(:));
+numLabels = length(data.seeds)+1;
 score = zeros([size(labels,1)*size(labels,2) numLabels], 'single');
 fprintf(' Spatial (X Dist.):');
 tic;
@@ -70,7 +70,7 @@ function score = colorScore(conf, data)
 featDim = size(data.image.lab, 3);
 feat = reshape(data.image.lab, [size(data.image.lab,1)*size(data.image.lab,2) featDim]);
 labels = data.segLabel;
-numLabels = max(labels(:));
+numLabels = length(data.seeds)+1;
 score = zeros([size(labels,1)*size(labels,2) numLabels], 'single');
 
 fgMask = labels ~= 1;
@@ -135,7 +135,7 @@ featDim = size(feat, 2);
 
 % Compute GMM clusters for each region and assign log-likelihood
 labels = data.segLabel;
-numLabels = max(labels(:));
+numLabels = length(data.seeds)+1;
 score = zeros([size(labels,1)*size(labels,2) numLabels], 'single');
 
 fgMask = labels ~= 1;
