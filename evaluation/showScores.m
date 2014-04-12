@@ -1,0 +1,6 @@
+function showScores(fileName)
+load(fileName);
+fprintf('Scores in file: %s\n', fileName);
+fprintf('unary %.2f, rectangle %.2f, refined %.2f, tiered %.2f, mrf %.2f\n', ...
+        mean(scores.mao.unary), mean(scores.mao.rect), mean(scores.mao.refined),...
+        mean(scores.mao.tiered), mean(scores.mao.mrf));
