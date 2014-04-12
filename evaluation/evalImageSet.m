@@ -10,6 +10,7 @@ scores.mao.slic = zeros(1, numImages);
 scores.mao.rect = zeros(1, numImages);
 scores.mao.refined = zeros(1, numImages);
 scores.mao.unary = zeros(1, numImages);
+scores.mao.mrf = zeros(1, numImages);
 scores.conf = conf;
 
 for i = 1:numImages,
@@ -42,9 +43,9 @@ for i = 1:numImages,
     scores.mao.unary(i) = evals.mao;
     
     % Get MRF parse
-    mrfLabel = standardMRF(conf, data);
-    evals = evalLabels(mrfLabel, gtLabels);
-    scores.mao.mrf(i) = evals.mao;
+    %mrfLabel = standardMRF(conf, data);
+    %evals = evalLabels(mrfLabel, gtLabels);
+    %scores.mao.mrf(i) = evals.mao;
     
     fprintf('Image %i: rect %.1f (%.1f), refined %.1f (%.1f), tiered %.1f (%.1f), unary %.1f (%.1f),  mrf %.1f (%.1f)\n\n', i, ...
                 scores.mao.rect(i)*100, mean(scores.mao.rect(1:i))*100,...
