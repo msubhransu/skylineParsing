@@ -27,7 +27,14 @@ fginds = sub2ind(size(data.labels), fgi, fgj, ones(size(fgi)));
 
 % Label 1 is background
 unary.combined(bginds) = -maxVal;
+unary.color(bginds)    = -maxVal;
+unary.texture(bginds)  = -maxVal;
+unary.spatial(bginds)  = -maxVal;
+
 unary.combined(fginds) = maxVal;
+unary.color(fginds)    = maxVal;
+unary.texture(fginds)  = maxVal;
+unary.spatial(fginds)  = maxVal;
 
 % Cost of labelling background is high, seeds is low
 for i=2:numLabels,
@@ -37,10 +44,12 @@ for i=2:numLabels,
     unary.combined(seedinds) = -maxVal*100;
 end
 
-% Ignore these for memory reasons
-unary.color = [];
-unary.texture = [];
-unary.spatial = [];
+% Ignore these for memory reasons unless specified
+if ~conf.keepUnary
+    unary.color = [];
+    unary.texture = [];
+    unary.spatial = [];
+end
 
 %--------------------------------------------------------------------------
 %                                                     Compute spatial terms
