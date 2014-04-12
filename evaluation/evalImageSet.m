@@ -17,17 +17,20 @@ for i = 1:numImages,
     data = getData(conf, anno, annoId(i));
     gtLabels = data.gtLabels;
 
+    % Prepare data
+    data = prepareData(conf, data);
+    
     % Rectangular parse
-    [parses, data] = skylineParse(conf, data);
+    parses = skylineParse(conf, data, 'rectangle');
     evals = evalLabels(parse2label(parses.rect, data), gtLabels);
     scores.mao.rect(i) = evals.mao;
 
-    % Refined parse
+    % Refined parse (part of rectangle parse)
     evals = evalLabels(parse2label(parses.refined, data), gtLabels);
     scores.mao.refined(i) = evals.mao;
     
-        % Get tiered parse
-    parses = tieredMRF(conf, data);
+    % Get tiered parse
+    parses = skylineParse(conf, data, 'tiered');
     evals = evalLabels(parse2label(parses.tiered, data), gtLabels);
     scores.mao.tiered(i) = evals.mao;
     
@@ -43,7 +46,7 @@ for i = 1:numImages,
     scores.mao.unary(i) = evals.mao;
     
     % Get MRF parse
-    mrfLabel = standardMRF(conf, data);
+    [~,mrfLabel] = skylineParse(conf, data, 'standard');
     evals = evalLabels(mrfLabel, gtLabels);
     scores.mao.mrf(i) = evals.mao;
     
