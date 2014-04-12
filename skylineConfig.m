@@ -14,6 +14,9 @@ conf.path.texton = fullfile(conf.path.dataset, 'textons');
 % Display
 conf.display = true;
 
+% Unary potentials
+conf.keepUnary = false;
+
 % Image parameters
 conf.param.image.maxDim = 2000; % Set the maximum dimension to this for speed
 
