@@ -34,17 +34,17 @@ for i = 1:numImages,
     scores.mao.combined(i) = evals.mao;
 
     % No color
-    [~,unaryLabel] = min(alpha*data.unary.texture + (1-alpha)*data.unary.spatial, [], 3);
+    [~,unaryLabel] = min(alpha*(1-beta)*data.unary.texture + (1-alpha)*data.unary.spatial, [], 3);
     evals = evalLabels(unaryLabel, gtLabels);
     scores.mao.nocolor(i) = evals.mao;
 
     % No texture
-    [~,unaryLabel] = min(alpha*data.unary.color + (1-alpha)*data.unary.spatial, [], 3);
+    [~,unaryLabel] = min(alpha*beta*data.unary.color + (1-alpha)*data.unary.spatial, [], 3);
     evals = evalLabels(unaryLabel, gtLabels);
     scores.mao.notexture(i) = evals.mao;
     
     % No spatial
-    [~,unaryLabel] = min(beta*data.unary.color + (1-beta)*data.unary.texture, [], 3);
+    [~,unaryLabel] = min(alpha*beta*data.unary.color + alpha*(1-beta)*data.unary.texture, [], 3);
     evals = evalLabels(unaryLabel, gtLabels);
     scores.mao.nospatial(i) = evals.mao;
     
