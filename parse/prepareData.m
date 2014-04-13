@@ -1,4 +1,8 @@
-function data = prepareData(conf, data)
+function data = prepareData(conf, data, autoSeeds)
+if nargin < 3, 
+    autoSeeds = false;
+end
+    
 [h, w, ~] = size(data.im);
 scale = 1;
 if max(h,w) > conf.param.image.maxDim
@@ -15,7 +19,13 @@ data.image.rgb   = im2single(data.im);
 % Compute super-pixels using SLIC
 fprintf('Computing SLIC segmentation..')
 tic;
-data.segments = vl_slic(data.image.lab, conf.param.slic.regionSize, conf.param.slic.regularizer);
+if autoSeeds, 
+    data.segments = vl_slic(data.image.lab, conf.param.slic.autoRegionSize, conf.param.slic.autoRegularizer) + 1;
+    fprintf('auto seeds..');
+    data.seeds = getAutoSeeds(conf,data);
+else
+    data.segments = vl_slic(data.image.lab, conf.param.slic.regionSize, conf.param.slic.regularizer);
+end
 fprintf('[done] %i segments. %.2fs elapsed.\n', max(data.segments(:)),toc);
 
 % Assign segments to the labels (initial segmentation)
