@@ -23,6 +23,11 @@ conf.param.image.maxDim = 2000; % Set the maximum dimension to this for speed
 % SLIC segmentation params
 conf.param.slic.regionSize = 30;
 conf.param.slic.regularizer = 0.001;
+conf.param.slic.autoRegionSize = 100;   
+conf.param.slic.autoRegularizer = 0.001;
+
+% Graph based segmentation parameters
+conf.param.graph = [0.8,900,100];
 
 % Texton library parameters
 conf.param.texton.no = 6;      %
@@ -52,3 +57,9 @@ conf.param.building.minWidth = 15;
 conf.param.building.search.step = 1; % Step size for search of rectangles
 conf.param.building.search.deltay = 25; % Allow upper boundary of the rectangle to go higher
 conf.param.building.search.tau = 1e-2; % Cost of making shifts
+
+% Automatic seeds computation parameters
+conf.param.autoseeds.K = 20;
+conf.param.autoseeds.NS = 20000;
+conf.param.autoseeds.segPerPart = 2;
+conf.param.autoseeds.wfactor = 4;
