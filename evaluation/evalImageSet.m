@@ -46,7 +46,7 @@ for i = 1:numImages,
     scores.mao.unary(i) = evals.mao;
     
     % Get MRF parse
-    [~,mrfLabel] = skylineParse(conf, data, 'standard');
+    mrfLabel = skylineParse(conf, data, 'standard');
     evals = evalLabels(mrfLabel, gtLabels);
     scores.mao.mrf(i) = evals.mao;
     
