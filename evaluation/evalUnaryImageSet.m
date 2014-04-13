@@ -1,4 +1,7 @@
 function scores = evalUnaryImageSet(conf, anno, imageSet)
+% Set random seed for repeatability
+rng('default');
+
 imageSetId = find(ismember(anno.meta.imageSet, imageSet));
 annoId = find(anno.object.imageSet == imageSetId);
 numImages = length(annoId);
