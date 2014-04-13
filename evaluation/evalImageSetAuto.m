@@ -35,9 +35,13 @@ for i = 1:numImages,
     evals = evalLabels(parse2label(parses.tiered, data), gtLabels, true);
     scores.mao.tiered(i) = evals.mao;
     
-    % Get SLIC parse (seeds projected to slic regions)
-    slicSeg = data.segLabel;
-    slicSeg(slicSeg == 0) = 1;
+    % Get SLIC parse
+    slicSeg = data.segments;
+    for j = 1:size(slicSeg,2)
+        slicSeg(1:data.region(i,1),i) = 1;
+        slicSeg(data.region(i,2):end,i) = 1;
+    end
+    slicSeg(slicSeg < 1) = 1;
     evals = evalLabels(slicSeg, gtLabels, true);
     scores.mao.slic(i) = evals.mao;
     
@@ -46,9 +50,10 @@ for i = 1:numImages,
     evals = evalLabels(unaryLabel, gtLabels, true);
     scores.mao.unary(i) = evals.mao;
     
-    fprintf('Image %i: rect %.1f (%.1f), refined %.1f (%.1f), tiered %.1f (%.1f), unary %.1f (%.1f)\n\n', i, ...
+    fprintf('Image %i: rect %.1f (%.1f), refined %.1f (%.1f), tiered %.1f (%.1f), slic %.1f (%.1f) unary %.1f (%.1f)\n\n', i, ...
                 scores.mao.rect(i)*100, mean(scores.mao.rect(1:i))*100,...
                 scores.mao.refined(i)*100, mean(scores.mao.refined(1:i))*100,...
                 scores.mao.tiered(i)*100, mean(scores.mao.tiered(1:i))*100,...
+                scores.mao.slic(i)*100, mean(scores.mao.slic(1:i))*100,...
                 scores.mao.unary(i)*100, mean(scores.mao.unary(1:i))*100);
 end
