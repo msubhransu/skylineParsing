@@ -33,8 +33,12 @@ nv = tx*ty;
 T = zeros(nv, 2);
 W = computeWeightMatrix(data.im);
 [jj,ii] = meshgrid(1:tx, 1:ty);
-figure(1); clf;
-imagesc(label); axis image off;
+
+if conf.display
+    figure(1); clf;
+    imagesc(label); axis image off;
+end
+
 fprintf('Standard MRF parsing:...');
 tic;
 for i  = 1:numIter, 
@@ -53,8 +57,10 @@ for i  = 1:numIter,
     label(currLabel > 0) = labelInd;
     
     % Display labellings
-    figure(1);
-    imagesc(label); axis image off;
-    title(sprintf('iter %i/%i', i, numIter));
+    if conf.display
+        figure(1);
+        imagesc(label); axis image off;
+        title(sprintf('iter %i/%i', i, numIter));
+    end
 end
 fprintf('%.2fs elapsed.\n', toc);
