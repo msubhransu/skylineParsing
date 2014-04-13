@@ -36,8 +36,8 @@ conf.param.texton.radius = 20; % radius of region for histogram computation
 % Unary potential terms
 conf.param.color.numGMMClusters = 3;
 conf.param.texture.numGMMClusters = 3;
-conf.param.alpha = 0.3;
-conf.param.beta = 0.5;
+conf.param.alpha = 0.35;
+conf.param.beta = 0.20;
 
 % Pairwise potential terms
 conf.param.pairwise.gamma = 1;      % Affinity scores
