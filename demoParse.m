@@ -15,6 +15,9 @@ rparse = skylineParse(conf, data, 'rectangle');
 %% Get parses using tiered MRF
 tparse = skylineParse(conf, data, 'tiered');
 
+%% Get parses using standard MRF
+mparse = skylineParse(conf, data, 'standard');
+
 %% Display parses
 figure;
 
@@ -56,6 +59,12 @@ title('tiered MRF','fontSize',16);
 vl_tightsubplot(2,4,8,'Margin',0.01);
 imagesc(parse2label(tparse.tiered, data)); axis image off;
 title(sprintf('MAO=%.2f', evals.mao*100),'fontSize',16);
+
+%% Standard MRF
+figure;
+imagesc(mparse); axis image off;
+evals = evalLabels(mparse, gtLabels);
+title(sprintf('standard MRF MAO=%.2f', evals.mao*100),'fontSize',16);
 
 
 
