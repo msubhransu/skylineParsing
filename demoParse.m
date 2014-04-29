@@ -6,8 +6,8 @@ data = getData(conf, anno, dataId);
 gtLabels = data.gtLabels;
 fprintf('Loaded data for id=%i\n', dataId);
 
-%% Prepare data (unary potentials)
-data = prepareData(conf, data);
+%% Prepare data (unary potentials) for reuse with multiple methods
+data = prepareData(conf, data); % This will be called internally by skylineParse if unaries are not precomputed
     
 %% Get parses using rectangle/refined MRF
 rparse = skylineParse(conf, data, 'rectangle');
@@ -20,7 +20,6 @@ mparse = skylineParse(conf, data, 'standard');
 
 %% Display parses
 figure;
-
 % Image and ground truth
 vl_tightsubplot(2,4,1,'Margin',0.01);
 imagesc(data.im); axis image off;
@@ -60,11 +59,8 @@ vl_tightsubplot(2,4,8,'Margin',0.01);
 imagesc(parse2label(tparse.tiered, data)); axis image off;
 title(sprintf('MAO=%.2f', evals.mao*100),'fontSize',16);
 
-%% Standard MRF
+% Standard MRF
 figure;
 imagesc(mparse); axis image off;
 evals = evalLabels(mparse, gtLabels);
 title(sprintf('standard MRF MAO=%.2f', evals.mao*100),'fontSize',16);
-
-
-
