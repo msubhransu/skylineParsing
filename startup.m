@@ -7,6 +7,7 @@ addpath evaluation;
 addpath extern/pbDetector;
 addpath extern/textons;
 addpath extern/maxflow;
+addpath bin;
 disp('Added paths..');
 
 % Set this to the path of the VLFEAT
