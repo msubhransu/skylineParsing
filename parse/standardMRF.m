@@ -60,7 +60,7 @@ for i  = 1:numIter,
     if conf.display
         figure(1);
         imagesc(label); axis image off;
-        title(sprintf('standard MRF: updating: iter %i/%i', i, numIter));
+        title(sprintf('standard MRF: updating: iter %i/%i', i, numIter),'fontSize',16);
     end
 end
 fprintf('%.2fs elapsed.\n', toc);
