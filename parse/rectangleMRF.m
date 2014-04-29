@@ -33,11 +33,11 @@ while any(~taken),
     if conf.display
         figure(1); clf;
         showParse(data.im, parse);
-        title(sprintf('Initial parse, building %i/%i\n', sum(taken), numBuildings));
+        title(sprintf('rectange MRF: initialization: building %i/%i', sum(taken), numBuildings),'fontSize',16);
     end
 end
 parses.initial = parse;
-fprintf('Rectangular parsing: %.2fs intial parse..',toc);
+fprintf('rectangle MRF: %.2fs intial parse..',toc);
 
 % Refine the rectangles
 label = parse2label(parses.initial, data);
@@ -54,11 +54,11 @@ for i = 1:maxIter,
     if conf.display
         figure(1); clf;
         showParse(data.im, parse);
-        title(sprintf('Refining parse, iter %i/%i\n', i, maxIter));
+        title(sprintf('rectangle MRF: updating: iter %i/%i', i, maxIter),'fontSize',16);
     end
 end
 parses.rect = parse;
-fprintf('%.2fs adjustment...',toc);
+fprintf('%.2fs updating...',toc);
 
 % Refine the upper boundaries of the rectangles
 label = parse2label(parse, data);
@@ -74,7 +74,7 @@ for i = 1:maxIter,
     if conf.display
         figure(1); clf;
         showParse(data.im, parse);
-        title(sprintf('Refining parse, iter %i/%i\n', i, maxIter));
+        title(sprintf('refined MRF: refining: iter %i/%i', i, maxIter),'fontSize',16);
     end
 end
 parses.refined = parse;

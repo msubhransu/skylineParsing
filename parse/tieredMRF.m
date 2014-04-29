@@ -31,11 +31,11 @@ while any(~taken),
     if conf.display
         figure(1); clf;
         showParse(data.im, parse);
-        title(sprintf('Initial parse, building %i/%i\n', sum(taken), numBuildings));
+        title(sprintf('tiered MRF: initialization: building %i/%i', sum(taken), numBuildings),'fontSize',16);
     end
 end
 parses.initial = parse;
-fprintf('Tiered parsing: %.2fs intial parse..',toc);
+fprintf('tiered MRF: %.2fs intial parse..',toc);
 
 
 % Refine the rectangles using tiered labelling
@@ -51,7 +51,7 @@ for i = 1:maxIter,
     if conf.display
         figure(1); clf;
         showParse(data.im, parse);
-        title(sprintf('Refining parse, iter %i/%i\n', i, maxIter));
+        title(sprintf('tiered MRF: updating: iter %i/%i', i, maxIter),'fontSize',16);
     end
 end
 parses.tiered = parse;

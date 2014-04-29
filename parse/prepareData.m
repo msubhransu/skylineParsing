@@ -8,8 +8,8 @@ scale = 1;
 if max(h,w) > conf.param.image.maxDim
     scale = conf.param.image.maxDim/max(h,w);
     data = resizeData(data, scale);
-    fprintf('Resizing image by factor=%.2f [dims %i x %i].\n', scale, round(h*scale), round(w*scale));
 end
+fprintf('Resizing image by factor=%.2f [dims %i x %i].\n', scale, round(h*scale), round(w*scale));
 data.scale = scale;
 % Preprocess images to various color formats
 data.image.lab   = im2single(applycform(data.im, makecform('srgb2lab')));
