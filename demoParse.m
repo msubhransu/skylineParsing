@@ -12,7 +12,7 @@ data = prepareData(conf, data);
 %% Get parses using rectangle/refined MRF
 rparse = skylineParse(conf, data, 'rectangle');
 
-%% Get parses using rectangle/refined MRF
+%% Get parses using tiered MRF
 tparse = skylineParse(conf, data, 'tiered');
 
 %% Display parses
