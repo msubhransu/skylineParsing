@@ -1,12 +1,6 @@
 function anno = loadAnno()
 conf = skylineConfig();
 
-% Load anno from cache if it exists
-if exist(conf.path.anno, 'file');
-    load(conf.path.anno);
-    return;
-end    
-
 % Else load annotations
 cities = getCities(conf);
 anno.meta.cities = cities;
