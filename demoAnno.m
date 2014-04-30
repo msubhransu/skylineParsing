@@ -1,4 +1,7 @@
-%% Loads annotations and displays annotations
+% Here is a demo to illustrate loading annotations and displaying them
+%
+% Author: Subhransu Maji
+
 anno = loadAnno();
 fprintf('Loaded %i annotations.\n', length(anno.object.image));
 

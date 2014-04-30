@@ -1,3 +1,20 @@
+% This is a demo file to illustrate how the parsing works on an image.
+%
+% Here is the output on my laptop (2Ghz Intel Core i7, 4GB RAM)
+% >> demoParse
+% Loaded data for id=36
+% Resizing image by factor=1.00 [dims 692 x 1024].
+% Computing SLIC segmentation..[done] 839 segments. 2.49s elapsed.
+% Computing unary terms (27 regions)
+%  Color (LAB space):..........................[done] 3.70s elapsed.
+%  Texture (Textons):..........................[done] 16.28s elapsed.
+%  Spatial (X Dist.):..........................[done] 0.67s elapsed.
+% rectangle MRF: 4.62s intial parse..4.89s updating...3.13s refinement.
+% tiered MRF: 1.06s intial parse..6.06s refinement.
+% standard MRF:..34.66s elapsed.
+%
+% Author: Subhransu Maji
+
 %% Get data for a given image
 conf = skylineConfig();
 anno = loadAnno();
