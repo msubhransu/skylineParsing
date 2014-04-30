@@ -19,6 +19,7 @@ taken = false(1, numBuildings);
 currLower = tierLower;
 currUpper = tierUpper;
 tic;
+
 while any(~taken), 
     ind = findBottomBuilding(currLower, seeds, taken);
     [buildingUpper, rect] = initUpperBoundary(conf, data, currLower, tierUpper, ind);
@@ -34,6 +35,7 @@ while any(~taken),
         figure(1); clf;
         showParse(data.im, parse);
         title(sprintf('rectange MRF: initialization: building %i/%i', sum(taken), numBuildings),'fontSize',16);
+        gifWrite(conf);
     end
 end
 parses.initial = parse;
@@ -55,6 +57,7 @@ for i = 1:maxIter,
         figure(1); clf;
         showParse(data.im, parse);
         title(sprintf('rectangle MRF: updating: iter %i/%i', i, maxIter),'fontSize',16);
+        gifWrite(conf);
     end
 end
 parses.rect = parse;
@@ -75,6 +78,7 @@ for i = 1:maxIter,
         figure(1); clf;
         showParse(data.im, parse);
         title(sprintf('refined MRF: refining: iter %i/%i', i, maxIter),'fontSize',16);
+        gifWrite(conf);
     end
 end
 parses.refined = parse;
