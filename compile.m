@@ -1,14 +1,24 @@
-mex -O parse/mexOptRectangle.cc -outdir bin
+% Entry code for compiling all the mex files
+% Use option -std=c++11 for clang compiler on OSX 10.9
+% Use option -largeArrayDims for 64 bit machines
+
+% Create bin directory if it does not exist
+if ~exist('bin', 'file')
+    mkdir('bin');
+end
+
+% Mex code for rectangle parsing
+mex -O CXXFLAGS="-std=c++11" parse/mexOptRectangle.cc -outdir bin
 disp('done compiling..mexOptRectangle.');
 
-mex -O parse/mexOptTiered.cc -outdir bin
-disp('done compiling..mexOptRectangle.');
+% Mex code for tiered parsing
+mex -O CXXFLAGS="-std=c++11" parse/mexOptTiered.cc -outdir bin
+disp('done compiling..mexOptTiered.');
 
-mex -O -largeArrayDims extern/maxflow/maxflowmex.cpp extern/maxflow/graph.cpp extern/maxflow/maxflow.cpp  -outdir bin
+% Mex code for maxflow
+mex -O -largeArrayDims CXXFLAGS="-std=c++11" extern/maxflow/maxflowmex.cpp extern/maxflow/graph.cpp extern/maxflow/maxflow.cpp  -outdir bin
 disp('done compiling..maxflow.');
 
-mex -O extern/maxflow/mexComputeWeightMatrix.cc  -outdir bin
-disp('done compiling..mexComputeWeightMatrix');
-
-
-
+% Mex code for computing weight matrix
+mex -O CXXFLAGS="-std=c++11" extern/maxflow/mexComputeWeightMatrix.cc  -outdir bin
+disp('done compiling..mexComputeWeightMatrix.');
