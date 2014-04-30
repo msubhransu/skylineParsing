@@ -1,4 +1,11 @@
 function data = resizeData(data, scale)
+% RESIZEDATA rescales the data 
+%   DATA = RESIZEDATA(DATA, SCALE) resizes the DATA using the parameter
+%   SCALE. The image, seeds, and the upper and lower boundaries are
+%   interpolated as well. 
+%
+% Author: Subhransu Maji
+
 [~,w, ~] = size(data.im);
 data.im  = imresize(data.im, scale);
 [~,tw, ~] = size(data.im);

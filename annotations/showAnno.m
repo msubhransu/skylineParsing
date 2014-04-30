@@ -3,6 +3,8 @@ function showAnno(anno, imageSet)
 %   SHOWANNO(ANNO, IMAGESET) interactively shows all the annotations in
 %   ANNO that belong to images in IMAGESET. Press 'h' for help and 'esc' 
 %   to exit the display.
+%
+% Author: Subhransu Maji
 
 conf = skylineConfig();
 

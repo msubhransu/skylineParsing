@@ -1,4 +1,11 @@
 function data = getData(conf, anno, i)
+% GETDATA obtains the data for a given id
+%   DATA = GETDATA(CONF, ANNO, I) loads the data for image I as defined in
+%   the ANNO using the images and ground truth specified in the CONF. The
+%   output is a structure containing the image, regions, seeds, and other
+%   indexing information.
+%
+% Author: Subhransu Maji
 
 % Load annotations corresponding to this data
 city = anno.meta.cities{anno.object.cityId(i)};

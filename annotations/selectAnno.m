@@ -1,4 +1,10 @@
 function sanno = selectAnno(anno, subset)
+% SELECTANNO selects a subset of anno
+%   SANNO = SELECTANNO(ANNO, SUBSET) returns a new structure containing
+%   only the SUBSET of images in ANNO.
+%
+% Author: Subhransu Maji
+
 sanno = anno;
 sanno.object.image = anno.object.image(subset);
 sanno.object.seeds = anno.object.seeds(subset);

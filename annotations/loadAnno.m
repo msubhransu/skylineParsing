@@ -1,4 +1,10 @@
 function anno = loadAnno()
+% LOADANNO loads all the annotations
+%   ANNO = LOADANNO() returns a ANNO strcture that can be later queried to
+%   obtain individual annotations. 
+%
+% Author: Subhransu Maji
+
 conf = skylineConfig();
 
 % Else load annotations
