@@ -1,12 +1,23 @@
 function scores = evalImageSet(conf, anno, imageSet)
+% EVALIMAGESET evaluates various algorithms on the imageSet specified
+%   SCORES = EVALIMAGESET(CONF, ANNO, IMAGESET) runs various parsers on the
+%   set of images contained in the IMAGESET. The MAO scores for all the
+%   algorithms are returned in the SCORES structure. The CONF and ANNO
+%   contain the configuration and annotations respectively.
+%
+% Author: Subhransu Maji
+
+
 % Set random seed for repeatability
 rng('default'); 
 
+% Find images for the given imageSet
 imageSetId = find(ismember(anno.meta.imageSet, imageSet));
 annoId = find(anno.object.imageSet == imageSetId);
 numImages = length(annoId);
 fprintf('Evaluating on %i images (imageSet = %s).\n', numImages, imageSet);
 
+% Pre-allocate memory
 scores.annoId = annoId;
 scores.mao.tiered = zeros(1, numImages);
 scores.mao.slic = zeros(1, numImages);
@@ -16,6 +27,7 @@ scores.mao.unary = zeros(1, numImages);
 scores.mao.mrf = zeros(1, numImages);
 scores.conf = conf;
 
+% loop over images and compute scores
 for i = 1:numImages,
     data = getData(conf, anno, annoId(i));
     gtLabels = data.gtLabels;
