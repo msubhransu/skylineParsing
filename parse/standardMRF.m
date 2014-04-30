@@ -39,7 +39,7 @@ if conf.display
     imagesc(label); axis image off;
 end
 
-fprintf('Standard MRF parsing:...');
+fprintf('standard MRF:..');
 tic;
 for i  = 1:numIter, 
     labelInd = mod(i, numLabels) + 1;
