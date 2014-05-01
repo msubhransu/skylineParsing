@@ -37,8 +37,7 @@ Here are the steps for installation:
 
 * Clone the git repository into your local directory
 * Download the [skyline-12 dataset](http://ttic.uchicago.edu/~smaji/projects/data/skyline12.tar.gz)
-* Setting the paths:
-	* In the `skylineConfig.m` file you should change the path variables to reflect the location of the downloaded data and the `VLFEAT` directory 
+* Set the paths. In the `skylineConfig.m` file you should change the path variables to reflect the location of the downloaded data and the `VLFEAT` directory 
 * Run `startup.m`. You should see a message "Startup done".
 * Run `compile.m`. This compiles all the MEX files needed for the code to run. You are all set. 
 
@@ -63,7 +62,7 @@ Reﬁned MRF     | 63.4%        | 9.2s
 
 **Note**: minor differences might arise due to randomization in k-means
 
-#### Other notes
+### Other notes
 
 The `skylineConfig.m` has all the parameters for running the code. For example you can turn off the display by setting `conf.display=false`. If you want to save the output of the `rectangleMRF.m` as a .gif file, you can do so by setting `conf.gif=true`.
 
