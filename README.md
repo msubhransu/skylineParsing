@@ -28,8 +28,7 @@ LICENSE file for details).
 
 Prerequisites:
 
-* MATLAB 2011a (or equivalent)
-* g++ compiler (note: clang complier also works. see `compile.m`)
+* MATLAB 2011a (I have tested the code on 64 bit MAC OSX 10.9)
 * `VLFEAT` [http://www.vlfeat.org/](http://www.vlfeat.org)
 * A machine with 2GB+ of memory
 
@@ -40,6 +39,9 @@ Here are the steps for installation:
 * Set the paths. In the `skylineConfig.m` file you should change the path variables to reflect the location of the downloaded data and the `VLFEAT` directory 
 * Run `startup.m`. You should see a message "Startup done".
 * Run `compile.m`. This compiles all the MEX files needed for the code to run. You are all set. 
+
+**Note**: On the clang compiler on my laptop runing OSX 10.9 I had to pass CXXFLAGS="-std=c++11" as additional flags. On a linux machine I had to remove this in order to compile the code.
+
 
 ### Running the demos
 
