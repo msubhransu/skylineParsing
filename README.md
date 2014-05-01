@@ -36,7 +36,7 @@ Prerequisites:
 Here are the steps for installation:
 
 * Clone the git repository into your local directory
-* Download the [skyline-12 dataset](http://ttic.uchicago.edu/~smaji/projects/data/skyline12.tar.gz)
+* Download the [skyline-12 dataset](http://ttic.uchicago.edu/~smaji/projects/skylineParsing/skyline12.tar.gz)
 * Set the paths. In the `skylineConfig.m` file you should change the path variables to reflect the location of the downloaded data and the `VLFEAT` directory 
 * Run `startup.m`. You should see a message "Startup done".
 * Run `compile.m`. This compiles all the MEX files needed for the code to run. You are all set. 
@@ -49,8 +49,11 @@ In the main directory there are two demo files:
 * `demoParse.m`: This will load an image and run various algorithms for parsing. The code also displays the intermediate steps of parsing, evaluates the resulting parse in terms of mean average overlap `MAO` scores (described in the paper). 
 
 ### Evaluation
+Steps:
 
-To evaluate on a `imageSet={train, val, test}`, run `evalImageSet(conf, anno, imageSet)`. This will run all the methods on the `imageSet` and return the `MAO` scores for all the methods. This should reproduce the results in the paper, as listed below. The run times are on a Intel CPU @ 3.20GHz desktop.
+* Load annotations `anno=loadAnno()`
+* Load config variables `conf=skylineConfig()`
+* To evaluate on a `test` set, run `evalImageSet(conf, anno, 'test')`. This will run all the methods on the `test` and return the `MAO` scores for all the methods. This should reproduce the results in the paper, as listed below. The run times are on a Intel CPU @ 3.20GHz desktop.
 
 Method         | MAO 		   | Running time
 -------------- |:------------:|:------------:
@@ -60,7 +63,7 @@ Tiered MRF 	   | 59.4%  	   | 7.5s
 Rectangle MRF  |62.0% 		   | 5.5s
 Reﬁned MRF     | 63.4%        | 9.2s
 
-**Note**: minor differences might arise due to randomization in k-means
+**Note**: minor differences might arise due to randomization in k-means for unary potentials
 
 ### Other notes
 
