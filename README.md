@@ -42,6 +42,7 @@ Here are the steps for installation:
 * Run `compile.m`. This compiles all the MEX files needed for the code to run. You are all set. 
 
 ### Running the demos
+
 In the main directory there are two demo files:
 
 * `demoAnno.m`: This will load the annotations for the city of Chicago and display them in an interactive manner. Press `h` key for help. The code aldo contains other examples such as how to display all annotations, or those in the train set.
@@ -49,11 +50,12 @@ In the main directory there are two demo files:
 * `demoParse.m`: This will load an image and run various algorithms for parsing. The code also displays the intermediate steps of parsing, evaluates the resulting parse in terms of mean average overlap `MAO` scores (described in the paper). 
 
 ### Evaluation
-Steps:
+
+Here are the steps to evaluate various methods for parsing:
 
 * Load annotations `anno=loadAnno()`
 * Load config variables `conf=skylineConfig()`
-* To evaluate on a `test` set, run `evalImageSet(conf, anno, 'test')`. This will run all the methods on the `test` and return the `MAO` scores for all the methods. This should reproduce the results in the paper, as listed below. The run times are on a Intel CPU @ 3.20GHz desktop.
+* To evaluate on a `test` set, run `evalImageSet(conf, anno, 'test')`. This will run various the methods on `test` and return their `MAO` scores. This should reproduce the results in the paper (as listed below). The run times are on a Intel CPU @ 3.20GHz desktop.
 
 Method         | MAO 		   | Running time
 -------------- |:------------:|:------------:
