@@ -1,4 +1,4 @@
-## Parsing World's Skylines with Shape Constrained MRFs
+### Parsing World's Skylines with Shape Constrained MRFs
 
 Created by Subhransu Maji
 
